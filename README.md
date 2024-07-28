@@ -1,74 +1,113 @@
-<<<<<<< HEAD
-# Getting Started with Create React App
+# Shopping Cart with Payment Integration
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a simple shopping cart application built with React. The application allows users to add items to their cart, remove items from their cart, and proceed to a checkout page where they can choose a payment method. The project demonstrates a basic integration of Google Pay for payment processing.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Add items to the cart
+- Remove items from the cart
+- View cart summary
+- Proceed to checkout
+- Google Pay integration for payment processing
+- Generates and downloads a bill in a zip file upon successful payment
 
-### `npm start`
+## Technologies Used
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- React
+- React Router
+- JSZip
+- file-saver
+- Google Pay API
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Setup
 
-### `npm test`
+1. Clone the repository:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    ```bash
+    git clone https://github.com/your-username/shopping-cart.git
+    cd shopping-cart
+    ```
 
-### `npm run build`
+2. Install dependencies:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+    ```bash
+    npm install
+    ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+3. Start the development server:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+    ```bash
+    npm start
+    ```
 
-### `npm run eject`
+## Payment Integration
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+This project includes a basic integration of Google Pay. The integration is done using the Google Pay API and the code is set up for a test environment.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Implementation Details
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. **Google Pay Button**: The Google Pay button is added to the checkout page, and the Google Pay API is initialized.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+2. **Payment Request**: When the user clicks the Google Pay button, a payment request is created and sent to Google Pay.
 
-## Learn More
+3. **Payment Processing**: Google Pay processes the payment and returns a payment token.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+4. **Bill Generation**: Upon successful payment, a bill is generated, zipped using JSZip, and downloaded using file-saver.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Code Snippets
 
-### Code Splitting
+Here are the relevant parts of the code for the payment integration:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```javascript
+import React, { useEffect } from 'react';
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 
-### Analyzing the Bundle Size
+const CheckoutPage = () => {
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+  useEffect(() => {
+    const paymentsClient = new window.google.payments.api.PaymentsClient({ environment: 'TEST' });
 
-### Making a Progressive Web App
+    const paymentDataRequest = {
+      // Your payment data request object
+    };
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+    const googlePayButton = paymentsClient.createButton({
+      onClick: () => onGooglePayButtonClicked(paymentsClient, paymentDataRequest),
+    });
 
-### Advanced Configuration
+    document.getElementById('container').appendChild(googlePayButton);
+  }, []);
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+  const onGooglePayButtonClicked = (paymentsClient, paymentDataRequest) => {
+    paymentsClient.loadPaymentData(paymentDataRequest).then(paymentData => {
+      handlePaymentSuccess(paymentData);
+    }).catch(err => {
+      console.error(err);
+    });
+  };
 
-### Deployment
+  const handlePaymentSuccess = (paymentData) => {
+    const zip = new JSZip();
+    const billContent = generateBillContent(); // Function to generate bill content
+    zip.file('bill.txt', billContent);
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+    zip.generateAsync({ type: 'blob' }).then(content => {
+      saveAs(content, 'bill.zip');
+    });
+  };
 
-### `npm run build` fails to minify
+  const generateBillContent = () => {
+    // Generate bill content
+  };
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-=======
-# raplet
->>>>>>> 20e0cb275f0659f3f3093fd7cfaa4a590327f582
+  return (
+    <div className="checkout-container">
+      <h2>Checkout</h2>
+      <div id="container"></div>
+    </div>
+  );
+};
+
+export default CheckoutPage;
+
