@@ -1,0 +1,36 @@
+/* Footer container */
+.footer {
+    background-color: #1e90ff; /* Dodger blue */
+    color: white;
+    padding: 1  px 0;
+    text-align: center;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.social-media-links {
+    display: flex;
+    gap: 15px;
+}
+
+
+.footer-link {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-link:hover {
+    color: #FFD700; /* Gold */
+}
+
+

@@ -1,0 +1,23 @@
+/* src/components/GooglePayPage.css */
+
+/* Container */
+.google-pay-container {
+    background-color: #e3f2fd; /* Light blue */
+    color: #0d47a1; /* Dark blue */
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+  }
+  
+  /* Heading */
+  .google-pay-heading {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #0d47a1; /* Dark blue */
+  }
+  
+  
+  #google-pay-button {
+    display: inline-block;
+  }
+  
